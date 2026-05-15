@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Designgrill</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+html,body{
+  background:#0a0a0a;
+  color:#f0f0f0;
+  min-height:100%;
+}
+
+#dg{
+  max-width:560px;
+  margin:0 auto;
+  padding:2rem;
+  font-family:'Inter',sans-serif;
+}
+
+/* —— Start screen —— */
+#dg-start{padding:0;}
+
+#dg-start-title{
+  font-family:'Space Mono',monospace;
+  font-size:20px;
+  color:#f0f0f0;
+  font-weight:400;
+  margin-bottom:6px;
+}
+
+#dg-start-sub{
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  color:#555;
+  margin-bottom:2rem;
+  line-height:1.6;
+}
+
+#dg-modes{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:1.5rem;
+}
+
+.mode-card{
+  background:#111;
+  border:0.5px solid #222;
+  border-radius:8px;
+  padding:1rem 1.25rem;
+  cursor:pointer;
+  transition:border-color 0.15s,background 0.15s;
+}
+
+.mode-card:hover{border-color:#444;}
+
+.mode-card.sel{
+  border:1.5px solid #f0f0f0;
+  background:#161616;
+}
+
+.mc-icon{
+  font-size:16px;
+  display:block;
+  margin-bottom:8px;
+  line-height:1;
+}
+
+.mc-title{
+  font-size:13px;
+  color:#f0f0f0;
+  font-weight:500;
+  margin-bottom:4px;
+}
+
+.mc-desc{
+  font-size:12px;
+  color:#555;
+  line-height:1.5;
+}
+
+#dg-level{
+  display:flex;
+  align-items:center;
+  margin-bottom:1.5rem;
+}
+
+.level-label{
+  font-size:12px;
+  color:#555;
+  margin-right:8px;
+}
+
+.lb{
+  padding:5px 16px;
+  border:0.5px solid #2a2a2a;
+  background:transparent;
+  color:#555;
+  border-radius:4px;
+  font-size:12px;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  margin-right:6px;
+}
+
+.lb:last-child{margin-right:0;}
+
+.lb.on{
+  background:#f0f0f0;
+  color:#0a0a0a;
+  border-color:#f0f0f0;
+}
+
+#dg-start-btn{
+  display:block;
+  width:100%;
+  background:#f0f0f0;
+  color:#0a0a0a;
+  border:none;
+  padding:12px;
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  text-align:center;
+}
+
+#dg-start-btn:hover{background:#ddd;}
+
+/* —— Session screen —— */
+#dg-session{display:none;padding:0;margin:0 -2rem;width:calc(100% + 4rem);}
+
+#dg-sbar{
+  background:#111;
+  border-bottom:0.5px solid #1a1a1a;
+  padding:10px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+#dg-sbar-left{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:#444;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  flex-shrink:0;
+}
+
+#dg-progress{
+  display:flex;
+  gap:4px;
+  align-items:center;
+  flex:1;
+  justify-content:center;
+}
+
+.prog-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#2a2a2a;
+  flex-shrink:0;
+}
+
+.prog-dot.done{background:#f0f0f0;}
+
+.prog-dot.active{
+  background:#f0f0f0;
+  width:8px;
+  height:8px;
+}
+
+#dg-end-btn{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:#444;
+  border:0.5px solid #222;
+  background:transparent;
+  padding:5px 12px;
+  border-radius:4px;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  flex-shrink:0;
+}
+
+#dg-end-btn:hover{color:#888;border-color:#444;}
+
+#dg-chat{
+  padding:1.5rem 2rem;
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+  min-height:320px;
+}
+
+.msg{display:flex;gap:12px;align-items:flex-start;}
+
+.msg-av{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:500;
+  flex-shrink:0;
+}
+
+.av-int{
+  background:#1a1a1a;
+  border:0.5px solid #2a2a2a;
+  color:#888;
+}
+
+.av-you{
+  background:#f0f0f0;
+  color:#0a0a0a;
+}
+
+.msg-body{flex:1;min-width:0;}
+
+.msg-name{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:#333;
+  text-transform:uppercase;
+  margin-bottom:4px;
+  letter-spacing:0.06em;
+}
+
+.msg-text{
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  color:#e0e0e0;
+  line-height:1.7;
+}
+
+.msg-text.loading{color:#555;}
+
+.msg-text strong{color:#f0f0f0;font-weight:500;}
+
+.feedback-box{
+  margin-top:10px;
+  background:#111;
+  border-left:2px solid #2a2a2a;
+  border-radius:4px;
+  padding:12px;
+}
+
+.fb-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:8px;
+  align-items:flex-start;
+}
+
+.fb-row:last-child{margin-bottom:0;}
+
+.fb-label{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:#444;
+  min-width:72px;
+  flex-shrink:0;
+}
+
+.fb-val{
+  font-family:'Inter',sans-serif;
+  font-size:12px;
+  color:#888;
+  line-height:1.6;
+}
+
+.fb-scores{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:4px;
+}
+
+.fb-score-item{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:#444;
+  text-transform:lowercase;
+}
+
+.fb-score{display:inline-flex;gap:3px;margin-left:4px;vertical-align:middle;}
+
+.fb-pip{
+  width:8px;
+  height:8px;
+  border-radius:2px;
+  background:#222;
+  display:inline-block;
+}
+
+.fb-pip.on{background:#f0f0f0;}
+
+/* —— Input area —— */
+#dg-input-area{
+  padding:1rem 2rem 1.5rem;
+  border-top:0.5px solid #1a1a1a;
+}
+
+#dg-textarea{
+  width:100%;
+  min-height:80px;
+  resize:none;
+  background:#111;
+  border:0.5px solid #222;
+  border-radius:6px;
+  color:#f0f0f0;
+  padding:10px 12px;
+  font-size:13px;
+  font-family:'Inter',sans-serif;
+  outline:none;
+  line-height:1.6;
+}
+
+#dg-textarea:focus{border-color:#444;}
+
+#dg-textarea::placeholder{color:#333;}
+
+#dg-input-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  gap:12px;
+}
+
+#dg-hint{
+  font-size:11px;
+  color:#333;
+  font-family:'Inter',sans-serif;
+}
+
+#dg-submit{
+  background:#f0f0f0;
+  color:#0a0a0a;
+  border:none;
+  padding:8px 20px;
+  border-radius:4px;
+  font-size:12px;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  flex-shrink:0;
+}
+
+#dg-submit:hover{background:#ddd;}
+
+#dg-submit:disabled{
+  opacity:0.3;
+  cursor:not-allowed;
+}
+
+/* —— Scorecard —— */
+#dg-scorecard{display:none;padding:0;}
+
+#dg-sc-title{
+  font-family:'Space Mono',monospace;
+  font-size:16px;
+  color:#f0f0f0;
+  font-weight:400;
+  margin-bottom:4px;
+}
+
+#dg-sc-sub{
+  font-size:13px;
+  color:#555;
+  margin-bottom:1.5rem;
+  font-family:'Inter',sans-serif;
+}
+
+#dg-sc-grade{
+  font-size:52px;
+  color:#f0f0f0;
+  font-weight:500;
+  line-height:1;
+  margin-bottom:4px;
+  font-family:'Inter',sans-serif;
+}
+
+#dg-sc-grade-label{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:#444;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin-bottom:1.5rem;
+}
+
+.sc-section{
+  background:#111;
+  border-radius:6px;
+  padding:1rem;
+  margin-bottom:10px;
+}
+
+.sc-section-title{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:#333;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  margin-bottom:8px;
+}
+
+.sc-section-body{
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  color:#888;
+  line-height:1.7;
+}
+
+#dg-restart{
+  display:block;
+  width:100%;
+  margin-top:1rem;
+  padding:12px;
+  border:0.5px solid #2a2a2a;
+  background:transparent;
+  color:#888;
+  font-size:13px;
+  border-radius:6px;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+}
+
+#dg-restart:hover{border-color:#444;color:#aaa;}
+</style>
+</head>
+<body>
+
+<div id="dg">
+
+<div id="dg-start">
+  <div id="dg-start-title">Designgrill</div>
+  <div id="dg-start-sub">A real design interview simulator. One question at a time. Honest feedback after each answer. End with a scorecard.</div>
+  <div id="dg-modes">
+    <div class="mode-card sel" onclick="selectMode('portfolio',this)">
+      <span class="mc-icon">🗂</span>
+      <div class="mc-title">Portfolio review</div>
+      <div class="mc-desc">Walk through your work. Defend your decisions. Handle follow-ups.</div>
+    </div>
+    <div class="mode-card" onclick="selectMode('challenge',this)">
+      <span class="mc-icon">💡</span>
+      <div class="mc-title">Design challenge</div>
+      <div class="mc-desc">Open-ended product design problems from real companies.</div>
+    </div>
+    <div class="mode-card" onclick="selectMode('behavioural',this)">
+      <span class="mc-icon">👤</span>
+      <div class="mc-title">Behavioural</div>
+      <div class="mc-desc">Situation, task, action, result. How you work with people.</div>
+    </div>
+    <div class="mode-card" onclick="selectMode('whiteboard',this)">
+      <span class="mc-icon">✏️</span>
+      <div class="mc-title">Whiteboard</div>
+      <div class="mc-desc">Redesign a product. Justify your approach step by step.</div>
+    </div>
+  </div>
+  <div id="dg-level">
+    <span class="level-label">Experience level:</span>
+    <button class="lb on" onclick="selectLevel('junior',this)">Junior</button>
+    <button class="lb" onclick="selectLevel('mid',this)">Mid</button>
+    <button class="lb" onclick="selectLevel('senior',this)">Senior</button>
+  </div>
+  <button id="dg-start-btn" onclick="startSession()">Start interview →</button>
+</div>
+
+<div id="dg-session">
+  <div id="dg-sbar">
+    <div id="dg-sbar-left">Designgrill · <span id="dg-mode-label">Portfolio</span> · <span id="dg-level-label">Junior</span></div>
+    <div id="dg-progress"></div>
+    <button id="dg-end-btn" onclick="endSession()">End session</button>
+  </div>
+  <div id="dg-chat"></div>
+  <div id="dg-input-area">
+    <textarea id="dg-textarea" placeholder="Type your answer here..."></textarea>
+    <div id="dg-input-row">
+      <div id="dg-hint">Be as detailed as you would in a real interview</div>
+      <button id="dg-submit" onclick="submitAnswer()">Submit answer →</button>
+    </div>
+  </div>
+</div>
+
+<div id="dg-scorecard">
+  <div id="dg-sc-title">Session complete</div>
+  <div id="dg-sc-sub"></div>
+  <div id="dg-sc-grade"></div>
+  <div id="dg-sc-grade-label"></div>
+  <div id="dg-sc-sections"></div>
+  <button id="dg-restart" onclick="restart()">Start new session →</button>
+</div>
+
+</div>
+
+<script>
+const QUESTIONS = {
+  portfolio: {
+    junior:[
+      "Walk me through a project you're most proud of. What was the problem, what did you design, and what was the outcome?",
+      "Tell me about a design decision you made that you later had to change. What happened and what did you learn?",
+      "How do you typically start a new design project? Walk me through your process from brief to final design.",
+      "Show me a project where you had to balance user needs with business constraints. How did you handle it?",
+      "What's one piece of work in your portfolio you'd redesign today? Why, and what would you change?",
+    ],
+    mid:[
+      "Walk me through a project where your initial design direction was wrong. How did you discover that and pivot?",
+      "Tell me about the most complex design system decision you've made. What were the tradeoffs?",
+      "Describe a project where you had significant disagreement with a stakeholder. How did you resolve it?",
+      "How do you measure whether a design is successful? Give me a specific example from your portfolio.",
+      "Walk me through a project where you had to advocate for the user against business pressure.",
+    ],
+    senior:[
+      "Tell me about a time you shaped the product strategy, not just the design execution.",
+      "Walk me through how you've built or scaled a design system. What were the hardest decisions?",
+      "Describe a project where you had to align multiple teams around a design direction. How did you do it?",
+      "What's the most significant design failure you've led? What was your role and what did you change?",
+      "How do you approach hiring and developing junior designers? Give me a concrete example.",
+    ]
+  },
+  challenge: {
+    junior:[
+      "Design an app to help first-year university students manage their schedule and mental health.",
+      "How would you design a feature that helps people track their daily water intake?",
+      "Design a simple onboarding experience for a budgeting app targeting people who've never budgeted before.",
+      "How would you redesign the checkout experience for a small independent online store?",
+      "Design a feature that helps remote teams feel more connected. What problem are you solving first?",
+    ],
+    mid:[
+      "Airbnb wants to improve trust between hosts and guests before a booking. How would you approach this?",
+      "Design a feature for Spotify that helps users discover podcasts relevant to their current mood.",
+      "How would you redesign the Google Maps search experience for pedestrians specifically?",
+      "Design a way for LinkedIn to help people who are actively job searching feel less overwhelmed.",
+      "Uber wants to improve the experience for drivers, not passengers. Where do you start?",
+    ],
+    senior:[
+      "How would you approach designing for a global product that needs to work across vastly different cultures?",
+      "Design a system that helps doctors communicate complex diagnoses to patients with low health literacy.",
+      "How would you redesign Twitter's content moderation experience from the user's perspective?",
+      "Netflix wants to reduce decision fatigue for users who spend too long choosing what to watch. How do you approach this?",
+      "Design the future of remote collaboration tools assuming video calls become obsolete in 5 years.",
+    ]
+  },
+  behavioural: {
+    junior:[
+      "Tell me about a time you received critical feedback on your design work. How did you respond?",
+      "Describe a situation where you had to meet a very tight deadline. What did you do?",
+      "Tell me about a time you had to work with someone who had a very different working style to you.",
+      "Give me an example of when you had to explain a complex design decision to someone non-technical.",
+      "Tell me about a time you made a mistake on a project. How did you handle it?",
+    ],
+    mid:[
+      "Tell me about a time you disagreed with a product manager's decision. What did you do?",
+      "Describe a situation where you had to influence a decision without having formal authority.",
+      "Tell me about the most difficult stakeholder relationship you've managed. How did you handle it?",
+      "Give me an example of when you had to push back on scope creep that would have compromised the user experience.",
+      "Tell me about a time when you had to make a design decision with incomplete information.",
+    ],
+    senior:[
+      "Tell me about a time you had to change the culture around design at a company. What was your approach?",
+      "Describe a situation where you had to make a significant strategic bet that others were sceptical about.",
+      "Tell me about a time you had to let go of a design you believed in because of business realities.",
+      "Give me an example of how you've built trust with engineering leadership.",
+      "Tell me about a time you had to navigate a major company pivot and how it affected your design work.",
+    ]
+  },
+  whiteboard: {
+    junior:[
+      "Walk me through how you would redesign the experience of booking a GP appointment in the UK.",
+      "How would you improve the onboarding experience for a new social media app? Think out loud.",
+      "Redesign the lost item reporting experience for public transport. Where do you start?",
+      "Walk me through how you'd design a feature to help people split bills with friends.",
+      "How would you improve the experience of returning a package to an online retailer?",
+    ],
+    mid:[
+      "Redesign the Amazon search experience specifically for people who don't know exactly what they want.",
+      "Walk me through how you'd approach redesigning the Instagram DM experience.",
+      "How would you redesign the NHS patient portal to be used by elderly patients with low digital literacy?",
+      "Redesign the Google Calendar event creation experience. What would you change and why?",
+      "Walk me through how you'd design a new feature for Notion targeting first-time users.",
+    ],
+    senior:[
+      "How would you approach redesigning the entire checkout experience for a B2B SaaS platform?",
+      "Walk me through how you'd redesign YouTube's recommendation system to prioritise user wellbeing.",
+      "Redesign the Apple Maps experience for cyclists. What's your design strategy?",
+      "How would you approach designing a unified design system for a company with 12 different product teams?",
+      "Walk me through how you'd design an AI-powered design tool for non-designers.",
+    ]
+  }
+};
+
+const MODE_LABELS = {portfolio:'Portfolio review',challenge:'Design challenge',behavioural:'Behavioural',whiteboard:'Whiteboard'};
+let mode='portfolio', level='junior', sessionQs=[], qIndex=0, history=[], loading=false;
+
+async function callAI(system, messages, maxTokens = 1000) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system, messages, max_tokens: maxTokens }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+  return data.text || '';
+}
+
+function selectMode(m,el){
+  mode=m;
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selectLevel(l,el){
+  level=l;
+  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function startSession(){
+  const qs=[...QUESTIONS[mode][level]].sort(()=>Math.random()-0.5).slice(0,5);
+  sessionQs=qs; qIndex=0; history=[];
+  document.getElementById('dg-start').style.display='none';
+  document.getElementById('dg-session').style.display='block';
+  document.getElementById('dg-mode-label').textContent=MODE_LABELS[mode];
+  document.getElementById('dg-level-label').textContent=level.charAt(0).toUpperCase()+level.slice(1);
+  document.getElementById('dg-chat').innerHTML='';
+  renderProgress();
+  askQuestion();
+}
+
+function renderProgress(){
+  const p=document.getElementById('dg-progress');
+  p.innerHTML=sessionQs.map((_,i)=>`<div class="prog-dot ${i<qIndex?'done':i===qIndex?'active':''}"></div>`).join('');
+}
+
+function addMsg(role,text,extra=''){
+  const chat=document.getElementById('dg-chat');
+  const isInt=role==='interviewer';
+  const div=document.createElement('div');
+  div.className='msg';
+  div.id=`msg-${Date.now()}`;
+  div.innerHTML=`
+    <div class="msg-av ${isInt?'av-int':'av-you'}">${isInt?'I':'Y'}</div>
+    <div class="msg-body">
+      <div class="msg-name">${isInt?'Interviewer':'You'}</div>
+      <div class="msg-text">${text}</div>
+      ${extra}
+    </div>`;
+  chat.appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'end'});
+  return div;
+}
+
+function addLoadingMsg(){
+  const chat=document.getElementById('dg-chat');
+  const div=document.createElement('div');
+  div.className='msg';
+  div.id='loading-msg';
+  div.innerHTML=`
+    <div class="msg-av av-int">I</div>
+    <div class="msg-body">
+      <div class="msg-name">Interviewer</div>
+      <div class="msg-text loading">Thinking...</div>
+    </div>`;
+  chat.appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'end'});
+}
+
+function removeLoadingMsg(){
+  const el=document.getElementById('loading-msg');
+  if(el) el.remove();
+}
+
+function askQuestion(){
+  if(qIndex>=sessionQs.length){endSession();return;}
+  const q=sessionQs[qIndex];
+  const intro = qIndex===0
+    ? `Hi, thanks for coming in today. Let's get started. Question ${qIndex+1} of ${sessionQs.length}:`
+    : `Good. Let's move on. Question ${qIndex+1} of ${sessionQs.length}:`;
+  addMsg('interviewer',`${intro}<br><br><strong>${q}</strong>`);
+  document.getElementById('dg-textarea').value='';
+  document.getElementById('dg-textarea').disabled=false;
+  document.getElementById('dg-submit').disabled=false;
+  document.getElementById('dg-textarea').focus();
+}
+
+async function submitAnswer(){
+  const ans=document.getElementById('dg-textarea').value.trim();
+  if(!ans||loading) return;
+  loading=true;
+  document.getElementById('dg-submit').disabled=true;
+  document.getElementById('dg-textarea').disabled=true;
+  addMsg('you',ans.replace(/\n/g,'<br>'));
+  history.push({q:sessionQs[qIndex],a:ans});
+  addLoadingMsg();
+
+  const systemPrompt=`You are a senior design interviewer at a top tech company (think Google, Airbnb, Figma). You are conducting a ${MODE_LABELS[mode]} interview with a ${level}-level designer.
+
+Your job:
+1. Give a SHORT natural interviewer response (1-2 sentences max) — react genuinely to their answer, like a real person would. Reference something specific they said.
+2. Then give structured feedback in this exact JSON format after the text, wrapped in <FEEDBACK> tags:
+<FEEDBACK>
+{
+  "strong": "one specific thing they did well — be concrete, not generic",
+  "weak": "one specific gap or missed opportunity — be honest and direct",
+  "senior_answer": "what a senior designer would have added that they didn't — 1-2 sentences",
+  "scores": {"clarity": 3, "depth": 2, "structure": 3, "designer_thinking": 2}
+}
+</FEEDBACK>
+Scores are 1-4. Be honest. Don't give everyone 4s.
+
+Rules:
+- React like a human interviewer, not a teacher
+- Be direct and honest in feedback — vague praise is useless
+- If the answer was weak, say so respectfully but clearly
+- Never use bullet points in the interviewer response part
+- The feedback must feel genuinely helpful, not generic`;
+
+  const messages = history.slice(0,-1).flatMap(h=>[
+    {role:'user',content:`Question: ${h.q}\nMy answer: ${h.a}`},
+    {role:'assistant',content:'Acknowledged.'}
+  ]);
+  messages.push({role:'user',content:`Question: ${sessionQs[qIndex]}\nMy answer: ${ans}`});
+
+  try{
+    const full=await callAI(systemPrompt, messages, 1000);
+    const feedbackMatch=full.match(/<FEEDBACK>([\s\S]*?)<\/FEEDBACK>/);
+    const interviewerText=full.replace(/<FEEDBACK>[\s\S]*?<\/FEEDBACK>/,'').trim();
+    let feedbackHTML='';
+    if(feedbackMatch){
+      try{
+        const fb=JSON.parse(feedbackMatch[1].trim());
+        const pips=(n)=>Array.from({length:4},(_,i)=>`<span class="fb-pip ${i<n?'on':''}"></span>`).join('');
+        feedbackHTML=`<div class="feedback-box">
+          <div class="fb-row"><span class="fb-label">Strong</span><span class="fb-val">${fb.strong}</span></div>
+          <div class="fb-row"><span class="fb-label">Weak</span><span class="fb-val">${fb.weak}</span></div>
+          <div class="fb-row"><span class="fb-label">Senior add</span><span class="fb-val">${fb.senior_answer}</span></div>
+          <div class="fb-scores">
+            ${Object.entries(fb.scores).map(([k,v])=>`<span class="fb-score-item">${k} <span class="fb-score">${pips(v)}</span></span>`).join('')}
+          </div>
+        </div>`;
+        history[history.length-1].scores=fb.scores;
+      }catch(e){}
+    }
+    removeLoadingMsg();
+    addMsg('interviewer',interviewerText.replace(/\n/g,'<br>'),feedbackHTML);
+    qIndex++;
+    renderProgress();
+    if(qIndex<sessionQs.length){
+      setTimeout(()=>{
+        addMsg('interviewer',`Ready for the next question?<br><br><strong>${sessionQs[qIndex]}</strong>`);
+        document.getElementById('dg-textarea').value='';
+        document.getElementById('dg-textarea').disabled=false;
+        document.getElementById('dg-submit').disabled=false;
+        document.getElementById('dg-textarea').focus();
+      },800);
+    } else {
+      setTimeout(()=>endSession(),800);
+    }
+  }catch(e){
+    removeLoadingMsg();
+    addMsg('interviewer', e.message || 'Something went wrong. Please try again.');
+    document.getElementById('dg-submit').disabled=false;
+    document.getElementById('dg-textarea').disabled=false;
+  }
+  loading=false;
+}
+
+async function endSession(){
+  document.getElementById('dg-session').style.display='none';
+  document.getElementById('dg-scorecard').style.display='block';
+  document.getElementById('dg-sc-sub').textContent=`${MODE_LABELS[mode]} · ${level} level · ${history.length} question${history.length!==1?'s':''} answered`;
+
+  if(history.length===0){
+    document.getElementById('dg-sc-grade').textContent='—';
+    document.getElementById('dg-sc-grade-label').textContent='No answers recorded';
+    document.getElementById('dg-sc-sections').innerHTML='<div class="sc-section"><div class="sc-section-body">You ended the session before answering any questions.</div></div>';
+    return;
+  }
+
+  document.getElementById('dg-sc-grade').textContent='...';
+  document.getElementById('dg-sc-grade-label').textContent='Generating scorecard';
+
+  const systemPrompt=`You are a senior design interviewer. The candidate just completed a ${MODE_LABELS[mode]} interview at ${level} level. Based on their answers, give an honest session scorecard.
+
+Respond ONLY in this JSON format, no other text:
+{
+  "grade": "A / B+ / B / C+ / C / D",
+  "grade_label": "3-4 word summary e.g. Strong candidate, Needs more depth",
+  "strongest_moment": "specific reference to their best answer — what they did well",
+  "biggest_gap": "the most important thing they consistently missed across answers",
+  "one_thing": "the single most important thing to work on before their next interview",
+  "hiring_verdict": "Would you pass them to the next round? Be honest. One sentence."
+}`;
+
+  const userContent=history.map((h,i)=>`Q${i+1}: ${h.q}\nAnswer: ${h.a}`).join('\n\n');
+
+  try{
+    const txt=await callAI(systemPrompt, [{role:'user',content:userContent}], 600) || '{}';
+    const clean=txt.replace(/```json|```/g,'').trim();
+    const sc=JSON.parse(clean);
+    document.getElementById('dg-sc-grade').textContent=sc.grade||'—';
+    document.getElementById('dg-sc-grade-label').textContent=sc.grade_label||'';
+    document.getElementById('dg-sc-sections').innerHTML=`
+      <div class="sc-section"><div class="sc-section-title">Strongest moment</div><div class="sc-section-body">${sc.strongest_moment||'—'}</div></div>
+      <div class="sc-section"><div class="sc-section-title">Biggest gap</div><div class="sc-section-body">${sc.biggest_gap||'—'}</div></div>
+      <div class="sc-section"><div class="sc-section-title">Work on this before your next interview</div><div class="sc-section-body">${sc.one_thing||'—'}</div></div>
+      <div class="sc-section"><div class="sc-section-title">Hiring verdict</div><div class="sc-section-body">${sc.hiring_verdict||'—'}</div></div>`;
+  }catch(e){
+    document.getElementById('dg-sc-grade').textContent='—';
+    document.getElementById('dg-sc-grade-label').textContent='Could not generate scorecard';
+  }
+}
+
+function restart(){
+  document.getElementById('dg-scorecard').style.display='none';
+  document.getElementById('dg-start').style.display='block';
+}
+
+document.getElementById('dg-textarea').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)) submitAnswer();
+});
+</script>
+</body>
+</html>

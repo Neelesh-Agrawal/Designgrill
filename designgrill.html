@@ -1,511 +1,169 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Designgrill</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Designgrill · Practise the design interview before the real one</title>
+<meta name="description" content="A mock design interview. Answer five real questions, get honest feedback on every answer and a hiring scorecard at the end.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap');
-
-*{box-sizing:border-box;margin:0;padding:0;}
-
-html,body{
-  background:#0a0a0a;
-  color:#f0f0f0;
-  min-height:100%;
-}
-
-#dg{
-  max-width:560px;
-  margin:0 auto;
-  padding:2rem;
-  font-family:'Inter',sans-serif;
-}
-
-/* —— Start screen —— */
-#dg-start{padding:0;}
-
-#dg-start-title{
-  font-family:'Space Mono',monospace;
-  font-size:20px;
-  color:#f0f0f0;
-  font-weight:400;
-  margin-bottom:6px;
-}
-
-#dg-start-sub{
-  font-family:'Inter',sans-serif;
-  font-size:13px;
-  color:#555;
-  margin-bottom:2rem;
-  line-height:1.6;
-}
-
-#dg-modes{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:1.5rem;
-}
-
-.mode-card{
-  background:#111;
-  border:0.5px solid #222;
-  border-radius:8px;
-  padding:1rem 1.25rem;
-  cursor:pointer;
-  transition:border-color 0.15s,background 0.15s;
-}
-
-.mode-card:hover{border-color:#444;}
-
-.mode-card.sel{
-  border:1.5px solid #f0f0f0;
-  background:#161616;
-}
-
-.mc-icon{
-  font-size:16px;
-  display:block;
-  margin-bottom:8px;
-  line-height:1;
-}
-
-.mc-title{
-  font-size:13px;
-  color:#f0f0f0;
-  font-weight:500;
-  margin-bottom:4px;
-}
-
-.mc-desc{
-  font-size:12px;
-  color:#555;
-  line-height:1.5;
-}
-
-#dg-level{
-  display:flex;
-  align-items:center;
-  margin-bottom:1.5rem;
-}
-
-.level-label{
-  font-size:12px;
-  color:#555;
-  margin-right:8px;
-}
-
-.lb{
-  padding:5px 16px;
-  border:0.5px solid #2a2a2a;
-  background:transparent;
-  color:#555;
-  border-radius:4px;
-  font-size:12px;
-  cursor:pointer;
-  font-family:'Inter',sans-serif;
-  margin-right:6px;
-}
-
-.lb:last-child{margin-right:0;}
-
-.lb.on{
-  background:#f0f0f0;
-  color:#0a0a0a;
-  border-color:#f0f0f0;
-}
-
-#dg-start-btn{
-  display:block;
-  width:100%;
-  background:#f0f0f0;
-  color:#0a0a0a;
-  border:none;
-  padding:12px;
-  border-radius:6px;
-  font-size:13px;
-  cursor:pointer;
-  font-family:'Inter',sans-serif;
-  text-align:center;
-}
-
-#dg-start-btn:hover{background:#ddd;}
-
-/* —— Session screen —— */
-#dg-session{display:none;padding:0;margin:0 -2rem;width:calc(100% + 4rem);}
-
-#dg-sbar{
-  background:#111;
-  border-bottom:0.5px solid #1a1a1a;
-  padding:10px 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-}
-
-#dg-sbar-left{
-  font-family:'Space Mono',monospace;
-  font-size:10px;
-  color:#444;
-  text-transform:uppercase;
-  letter-spacing:0.1em;
-  flex-shrink:0;
-}
-
-#dg-progress{
-  display:flex;
-  gap:4px;
-  align-items:center;
-  flex:1;
-  justify-content:center;
-}
-
-.prog-dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#2a2a2a;
-  flex-shrink:0;
-}
-
-.prog-dot.done{background:#f0f0f0;}
-
-.prog-dot.active{
-  background:#f0f0f0;
-  width:8px;
-  height:8px;
-}
-
-#dg-end-btn{
-  font-family:'Space Mono',monospace;
-  font-size:10px;
-  color:#444;
-  border:0.5px solid #222;
-  background:transparent;
-  padding:5px 12px;
-  border-radius:4px;
-  cursor:pointer;
-  text-transform:uppercase;
-  letter-spacing:0.05em;
-  flex-shrink:0;
-}
-
-#dg-end-btn:hover{color:#888;border-color:#444;}
-
-#dg-chat{
-  padding:1.5rem 2rem;
-  display:flex;
-  flex-direction:column;
-  gap:1.25rem;
-  min-height:320px;
-}
-
-.msg{display:flex;gap:12px;align-items:flex-start;}
-
-.msg-av{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:11px;
-  font-weight:500;
-  flex-shrink:0;
-}
-
-.av-int{
-  background:#1a1a1a;
-  border:0.5px solid #2a2a2a;
-  color:#888;
-}
-
-.av-you{
-  background:#f0f0f0;
-  color:#0a0a0a;
-}
-
-.msg-body{flex:1;min-width:0;}
-
-.msg-name{
-  font-family:'Space Mono',monospace;
-  font-size:10px;
-  color:#333;
-  text-transform:uppercase;
-  margin-bottom:4px;
-  letter-spacing:0.06em;
-}
-
-.msg-text{
-  font-family:'Inter',sans-serif;
-  font-size:13px;
-  color:#e0e0e0;
-  line-height:1.7;
-}
-
-.msg-text.loading{color:#555;}
-
-.msg-text strong{color:#f0f0f0;font-weight:500;}
-
-.feedback-box{
-  margin-top:10px;
-  background:#111;
-  border-left:2px solid #2a2a2a;
-  border-radius:4px;
-  padding:12px;
-}
-
-.fb-row{
-  display:flex;
-  gap:8px;
-  margin-bottom:8px;
-  align-items:flex-start;
-}
-
-.fb-row:last-child{margin-bottom:0;}
-
-.fb-label{
-  font-family:'Space Mono',monospace;
-  font-size:11px;
-  color:#444;
-  min-width:72px;
-  flex-shrink:0;
-}
-
-.fb-val{
-  font-family:'Inter',sans-serif;
-  font-size:12px;
-  color:#888;
-  line-height:1.6;
-}
-
-.fb-scores{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:4px;
-}
-
-.fb-score-item{
-  font-family:'Space Mono',monospace;
-  font-size:11px;
-  color:#444;
-  text-transform:lowercase;
-}
-
-.fb-score{display:inline-flex;gap:3px;margin-left:4px;vertical-align:middle;}
-
-.fb-pip{
-  width:8px;
-  height:8px;
-  border-radius:2px;
-  background:#222;
-  display:inline-block;
-}
-
-.fb-pip.on{background:#f0f0f0;}
-
-/* —— Input area —— */
-#dg-input-area{
-  padding:1rem 2rem 1.5rem;
-  border-top:0.5px solid #1a1a1a;
-}
-
-#dg-textarea{
-  width:100%;
-  min-height:80px;
-  resize:none;
-  background:#111;
-  border:0.5px solid #222;
-  border-radius:6px;
-  color:#f0f0f0;
-  padding:10px 12px;
-  font-size:13px;
-  font-family:'Inter',sans-serif;
-  outline:none;
-  line-height:1.6;
-}
-
-#dg-textarea:focus{border-color:#444;}
-
-#dg-textarea::placeholder{color:#333;}
-
-#dg-input-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:8px;
-  gap:12px;
-}
-
-#dg-hint{
-  font-size:11px;
-  color:#333;
-  font-family:'Inter',sans-serif;
-}
-
-#dg-submit{
-  background:#f0f0f0;
-  color:#0a0a0a;
-  border:none;
-  padding:8px 20px;
-  border-radius:4px;
-  font-size:12px;
-  cursor:pointer;
-  font-family:'Inter',sans-serif;
-  flex-shrink:0;
-}
-
-#dg-submit:hover{background:#ddd;}
-
-#dg-submit:disabled{
-  opacity:0.3;
-  cursor:not-allowed;
-}
-
-/* —— Scorecard —— */
-#dg-scorecard{display:none;padding:0;}
-
-#dg-sc-title{
-  font-family:'Space Mono',monospace;
-  font-size:16px;
-  color:#f0f0f0;
-  font-weight:400;
-  margin-bottom:4px;
-}
-
-#dg-sc-sub{
-  font-size:13px;
-  color:#555;
-  margin-bottom:1.5rem;
-  font-family:'Inter',sans-serif;
-}
-
-#dg-sc-grade{
-  font-size:52px;
-  color:#f0f0f0;
-  font-weight:500;
-  line-height:1;
-  margin-bottom:4px;
-  font-family:'Inter',sans-serif;
-}
-
-#dg-sc-grade-label{
-  font-family:'Space Mono',monospace;
-  font-size:11px;
-  color:#444;
-  text-transform:uppercase;
-  letter-spacing:0.1em;
-  margin-bottom:1.5rem;
-}
-
-.sc-section{
-  background:#111;
-  border-radius:6px;
-  padding:1rem;
-  margin-bottom:10px;
-}
-
-.sc-section-title{
-  font-family:'Space Mono',monospace;
-  font-size:10px;
-  color:#333;
-  text-transform:uppercase;
-  letter-spacing:0.12em;
-  margin-bottom:8px;
-}
-
-.sc-section-body{
-  font-family:'Inter',sans-serif;
-  font-size:13px;
-  color:#888;
-  line-height:1.7;
-}
-
-#dg-restart{
-  display:block;
-  width:100%;
-  margin-top:1rem;
-  padding:12px;
-  border:0.5px solid #2a2a2a;
-  background:transparent;
-  color:#888;
-  font-size:13px;
-  border-radius:6px;
-  cursor:pointer;
-  font-family:'Inter',sans-serif;
-}
-
-#dg-restart:hover{border-color:#444;color:#aaa;}
+:root{--bg:#f5f3ef;--card:#fff;--ink:#1a1714;--muted:#6b645c;--line:#e5e0d8;--soft:#efebe4;--accent:#e4572e;--accent-soft:#fde7df;--ok:#15803d;--ok-soft:#dcfce7;--warn:#b45309;--warn-soft:#fef3c7;--mono:'JetBrains Mono',ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#12100e;--card:#1b1916;--ink:#f1ede7;--muted:#a39b91;--line:#2d2925;--soft:#24211d;--accent:#ff7a50;--accent-soft:#3a1d12;--ok:#4ade80;--ok-soft:#10301c;--warn:#fbbf24;--warn-soft:#382a0c}}
+*{box-sizing:border-box;margin:0}[hidden]{display:none!important}
+body{font:15px/1.6 Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,textarea{font:inherit;color:inherit}button{cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.brand{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;display:flex;gap:9px;align-items:center}
+.brand i{font-style:normal;width:28px;height:28px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+header a{font-size:.8rem;color:var(--muted);text-decoration:none}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px}
+.eyebrow{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 16px;font-weight:600;font-size:.88rem}
+.btn:hover{border-color:var(--ink)}
+.go{border:0;border-radius:14px;background:var(--ink);color:var(--bg);padding:14px 22px;font-weight:700;font-size:.98rem;transition:transform .15s,opacity .2s}
+.go:hover{transform:translateY(-1px)}.go:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.go.hot{background:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){.go.hot{color:#1a0b05}}
+/* start */
+.hero{padding:26px 0 30px;display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:end}
+.hero h1{font-size:clamp(2.1rem,5vw,3.6rem);line-height:1.02;letter-spacing:-.045em}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);max-width:52ch;margin-top:14px}
+.how{display:grid;gap:10px}
+.how div{display:flex;gap:12px;align-items:flex-start;font-size:.88rem;color:var(--muted)}
+.how b{flex:none;width:26px;height:26px;border-radius:8px;background:var(--soft);display:grid;place-items:center;font:600 .75rem var(--mono);color:var(--ink)}
+.setup{display:grid;gap:22px;margin-bottom:56px}
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mode{text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:16px;display:grid;gap:6px;align-content:start;transition:border-color .15s,transform .15s}
+.mode:hover{transform:translateY(-2px)}
+.mode svg{color:var(--muted)}
+.mode b{font-size:.98rem}.mode span{font-size:.8rem;color:var(--muted);line-height:1.45}
+.mode[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}.mode[aria-pressed=true] svg{color:var(--accent)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.levels{display:inline-flex;border:1px solid var(--line);border-radius:12px;padding:3px;background:var(--card)}
+.levels button{border:0;background:none;border-radius:9px;padding:8px 18px;font-weight:600;font-size:.88rem;color:var(--muted)}
+.levels button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.lbl{font-weight:700;font-size:.9rem;margin-bottom:10px}
+/* session */
+.session{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;padding:6px 0 56px;align-items:start}
+.rail{position:sticky;top:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.who{display:flex;gap:12px;align-items:center}
+.av{width:44px;height:44px;border-radius:14px;background:var(--accent);display:grid;place-items:center;color:#fff;font-weight:800;flex:none}
+.who b{display:block;font-size:.92rem}.who small{font-size:.76rem;color:var(--muted)}
+.steps{list-style:none;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin-top:4px}
+.steps li{display:flex;gap:10px;align-items:center;font-size:.8rem;color:var(--muted);padding:6px 8px;border-radius:9px}
+.steps li i{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font:600 .62rem var(--mono);font-style:normal}
+.steps li.on{background:var(--soft);color:var(--ink);font-weight:600}.steps li.on i{border-color:var(--accent);color:var(--accent)}
+.steps li.done i{background:var(--ok);border-color:var(--ok);color:#fff}
+.steps li span{display:block;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tip{font-size:.8rem;color:var(--muted)}.tip b{color:var(--ink);display:block;margin-bottom:4px;font-size:.82rem}
+.chat{display:grid;gap:16px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 24px;animation:rise .4s ease both}
+.q .eyebrow{color:var(--accent)}
+.q h2{font-size:clamp(1.15rem,2vw,1.45rem);line-height:1.3;letter-spacing:-.02em;margin-top:8px}
+.q .intro{font-size:.88rem;color:var(--muted);margin-top:4px}
+.ans{margin-left:auto;max-width:86%;background:var(--ink);color:var(--bg);border-radius:18px 18px 4px 18px;padding:14px 16px;font-size:.9rem;white-space:pre-wrap;animation:rise .3s ease both}
+.reply{display:grid;gap:10px;animation:rise .4s ease both}
+.say{display:flex;gap:10px;align-items:flex-start}
+.say .av{width:30px;height:30px;border-radius:10px;font-size:.78rem}
+.say p{background:var(--card);border:1px solid var(--line);border-radius:4px 18px 18px 18px;padding:12px 15px;font-size:.92rem}
+.fb{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-left:40px}
+.fb-g{display:grid;grid-template-columns:repeat(3,1fr)}
+.fb-g div{padding:14px 16px;border-right:1px solid var(--line)}.fb-g div:last-child{border:0}
+.fb-g h4{font:600 .66rem var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.fb-g p{font-size:.84rem}
+.fb-g .s h4{color:var(--ok)}.fb-g .w h4{color:var(--warn)}.fb-g .x h4{color:var(--accent)}
+.scores{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:12px 16px;border-top:1px solid var(--line);background:var(--soft)}
+.sc small{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);text-transform:capitalize}
+.sc small b{color:var(--ink)}
+.meter{height:6px;border-radius:9px;background:var(--line);margin-top:4px;overflow:hidden}.meter i{display:block;height:100%;border-radius:9px;background:var(--c,var(--accent));transform-origin:left;animation:grow .7s ease both}
+@keyframes grow{from{transform:scaleX(0)}}
+.typing{display:flex;gap:4px;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:4px 18px 18px 18px;width:max-content}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:b 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{opacity:.25;transform:translateY(-3px)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.composer{position:sticky;bottom:12px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.08);margin-top:6px}
+.composer textarea{width:100%;min-height:110px;border:0;background:none;resize:vertical;font-size:.95rem;line-height:1.55;padding:6px 8px;outline:none}
+.c-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 4px 0;border-top:1px solid var(--line)}
+.meta{display:flex;gap:14px;font:500 .74rem var(--mono);color:var(--muted)}
+.meta .warn{color:var(--warn)}
+.c-bar .acts{display:flex;gap:8px}
+.c-bar .go{padding:10px 18px;font-size:.9rem}
+.err{color:var(--accent);font-size:.85rem;padding:4px 8px}
+/* scorecard */
+.card{padding:10px 0 56px;display:grid;gap:16px}
+.grade{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center}
+.big{width:120px;height:120px;border-radius:28px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:3rem;font-weight:800;letter-spacing:-.05em}
+.grade h2{font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.03em;line-height:1.15}
+.grade p{color:var(--muted);font-size:.88rem;margin-top:6px}
+.verdict{display:inline-block;margin-top:12px;padding:8px 12px;border-radius:12px;background:var(--soft);font-size:.88rem;font-weight:500}
+.sec{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sec .panel h4{font:600 .68rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px}
+.avg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.qs{display:grid;gap:8px}
+.qs details{border:1px solid var(--line);border-radius:14px;padding:12px 16px;background:var(--card)}
+.qs summary{cursor:pointer;font-weight:600;font-size:.9rem;display:flex;justify-content:space-between;gap:12px}
+.qs summary span{font:500 .74rem var(--mono);color:var(--muted);flex:none}
+.qs details p{font-size:.86rem;color:var(--muted);margin-top:8px;white-space:pre-wrap}
+.skel{height:16px;border-radius:6px;background:linear-gradient(90deg,var(--soft),var(--card),var(--soft));background-size:200% 100%;animation:sh 1.3s linear infinite;margin:6px 0}
+@keyframes sh{to{background-position:-200% 0}}
+.foot{padding:20px 0 34px;font-size:.8rem;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line)}.foot a{color:inherit}
+@media (max-width:900px){.hero{grid-template-columns:1fr;gap:22px}.modes{grid-template-columns:1fr 1fr}.session{grid-template-columns:1fr}.rail{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.rail .tip{display:none}.sec{grid-template-columns:1fr}}
+@media (max-width:620px){.wrap{padding:0 16px}.panel{padding:16px}.rail{grid-template-columns:minmax(0,1fr)}.steps{display:flex;gap:6px}.steps li{padding:0}.steps li span{display:none}.fb{margin-left:0}.fb-g{grid-template-columns:1fr}.fb-g div{border-right:0;border-bottom:1px solid var(--line)}.scores,.avg{grid-template-columns:1fr 1fr}.grade{grid-template-columns:1fr;text-align:center;justify-items:center;gap:14px}.ans{max-width:94%}.q{padding:18px}.mode span{display:none}}
 </style>
 </head>
 <body>
+<div class="wrap">
+  <header><div class="brand"><i aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-4-1-6 1-9z"/></svg></i>Designgrill</div><a href="https://neeleshagrawal.vercel.app" target="_blank" rel="noopener">A Ship69 tool by Neelesh ↗</a></header>
 
-<div id="dg">
+  <!-- start -->
+  <main id="start">
+    <section class="hero">
+      <div><h1>Get grilled here, <span>not in the real interview.</span></h1><p>A mock design interview with five real questions. Answer the way you would out loud, and get honest feedback on every answer, what a senior designer would add, and a hiring scorecard at the end.</p></div>
+      <div class="how"><div><b>1</b>Pick the interview type and your level.</div><div><b>2</b>Answer five questions. Aim for about two minutes each.</div><div><b>3</b>Read the feedback, then the final scorecard and verdict.</div></div>
+    </section>
+    <div class="setup">
+      <div><div class="lbl">Interview type</div><div class="modes" id="modes"></div></div>
+      <div class="row"><div><div class="lbl">Your level</div><div class="levels" id="levels"><button data-l="junior" aria-pressed="true">Junior</button><button data-l="mid" aria-pressed="false">Mid</button><button data-l="senior" aria-pressed="false">Senior</button></div></div>
+      <button class="go hot" id="begin">Start the interview →</button></div>
+    </div>
+  </main>
 
-<div id="dg-start">
-  <div id="dg-start-title">Designgrill</div>
-  <div id="dg-start-sub">A real design interview simulator. One question at a time. Honest feedback after each answer. End with a scorecard.</div>
-  <div id="dg-modes">
-    <div class="mode-card sel" onclick="selectMode('portfolio',this)">
-      <span class="mc-icon">🗂</span>
-      <div class="mc-title">Portfolio review</div>
-      <div class="mc-desc">Walk through your work. Defend your decisions. Handle follow-ups.</div>
+  <!-- session -->
+  <main id="session" hidden>
+    <div class="session">
+      <aside class="rail">
+        <div class="panel"><div class="who"><div class="av">AR</div><div><b>Alex, design lead</b><small id="who-sub"></small></div></div>
+          <ul class="steps" id="steps"></ul></div>
+        <div class="panel tip" id="tip"></div>
+        <button class="btn" id="end">End and see scorecard</button>
+      </aside>
+      <div>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <div class="composer" id="composer">
+          <label for="answer" class="eyebrow" style="padding:4px 8px;display:block">Your answer</label>
+          <textarea id="answer" placeholder="Answer as you would out loud. Situation, what you did, why, and the outcome."></textarea>
+          <div class="c-bar"><div class="meta"><span id="words">0 words</span><span id="timer">0:00</span></div><div class="acts"><button class="btn" id="skip">Skip</button><button class="go hot" id="send" disabled>Answer · Ctrl+Enter</button></div></div>
+          <div class="err" id="err" hidden></div>
+        </div>
+      </div>
     </div>
-    <div class="mode-card" onclick="selectMode('challenge',this)">
-      <span class="mc-icon">💡</span>
-      <div class="mc-title">Design challenge</div>
-      <div class="mc-desc">Open-ended product design problems from real companies.</div>
+  </main>
+
+  <!-- scorecard -->
+  <main id="score" hidden>
+    <div class="card">
+      <div class="panel grade"><div class="big" id="g">…</div><div><span class="eyebrow" id="g-sub"></span><h2 id="g-label">Writing your scorecard…</h2><div class="verdict" id="g-verdict" hidden></div></div><div class="row" style="justify-content:flex-end"><button class="btn" id="copy">Copy summary</button><button class="go" id="again">New interview</button></div></div>
+      <div class="panel"><div class="lbl">Average across answers</div><div class="avg" id="avg"></div></div>
+      <div class="sec" id="sec"></div>
+      <div><div class="lbl">Your answers</div><div class="qs" id="qs"></div></div>
     </div>
-    <div class="mode-card" onclick="selectMode('behavioural',this)">
-      <span class="mc-icon">👤</span>
-      <div class="mc-title">Behavioural</div>
-      <div class="mc-desc">Situation, task, action, result. How you work with people.</div>
-    </div>
-    <div class="mode-card" onclick="selectMode('whiteboard',this)">
-      <span class="mc-icon">✏️</span>
-      <div class="mc-title">Whiteboard</div>
-      <div class="mc-desc">Redesign a product. Justify your approach step by step.</div>
-    </div>
-  </div>
-  <div id="dg-level">
-    <span class="level-label">Experience level:</span>
-    <button class="lb on" onclick="selectLevel('junior',this)">Junior</button>
-    <button class="lb" onclick="selectLevel('mid',this)">Mid</button>
-    <button class="lb" onclick="selectLevel('senior',this)">Senior</button>
-  </div>
-  <button id="dg-start-btn" onclick="startSession()">Start interview →</button>
+  </main>
+
+  <div class="foot"><span>Designgrill · made during Ship69, rebuilt Oct 2026.</span><a href="https://neeleshagrawal.vercel.app" target="_blank" rel="noopener">neeleshagrawal.vercel.app</a></div>
 </div>
-
-<div id="dg-session">
-  <div id="dg-sbar">
-    <div id="dg-sbar-left">Designgrill · <span id="dg-mode-label">Portfolio</span> · <span id="dg-level-label">Junior</span></div>
-    <div id="dg-progress"></div>
-    <button id="dg-end-btn" onclick="endSession()">End session</button>
-  </div>
-  <div id="dg-chat"></div>
-  <div id="dg-input-area">
-    <textarea id="dg-textarea" placeholder="Type your answer here..."></textarea>
-    <div id="dg-input-row">
-      <div id="dg-hint">Be as detailed as you would in a real interview</div>
-      <button id="dg-submit" onclick="submitAnswer()">Submit answer →</button>
-    </div>
-  </div>
-</div>
-
-<div id="dg-scorecard">
-  <div id="dg-sc-title">Session complete</div>
-  <div id="dg-sc-sub"></div>
-  <div id="dg-sc-grade"></div>
-  <div id="dg-sc-grade-label"></div>
-  <div id="dg-sc-sections"></div>
-  <button id="dg-restart" onclick="restart()">Start new session →</button>
-</div>
-
-</div>
-
 <script>
 const QUESTIONS = {
   portfolio: {
@@ -601,235 +259,124 @@ const QUESTIONS = {
     ]
   }
 };
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const MODES = {
+  portfolio: { name: 'Portfolio review', d: 'Walk through your work, decisions and outcomes.', i: '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/>', tip: 'Lead with the problem and your role. Name one decision, the alternative you rejected, and what changed because of it.' },
+  challenge: { name: 'Design challenge', d: 'Solve a product problem from a short brief.', i: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>', tip: 'Clarify the user and goal first. Pick one problem to solve, sketch the flow in words, then say how you would measure it.' },
+  behavioural: { name: 'Behavioural', d: 'Stories about feedback, conflict and pressure.', i: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 11a3 3 0 1 0 0-6M21 20c0-2.5-1.5-4-4-4.6"/>', tip: 'Use STAR: situation, task, action, result. Spend most of the time on what you did, and end with what you learned.' },
+  whiteboard: { name: 'Whiteboard', d: 'Think out loud through a redesign.', i: '<path d="M3 4h18v12H3zM8 20l4-4 4 4"/><path d="M7 12l3-3 2 2 4-4"/>', tip: 'Narrate your thinking. Users and their pain first, then constraints, then two options and why you would pick one.' },
+};
+const I = d => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const KEYS = ['clarity', 'depth', 'structure', 'designer_thinking'];
+let mode = 'portfolio', level = 'junior', qs = [], qi = 0, hist = [], busy = false, t0 = 0, tick = null;
 
-const MODE_LABELS = {portfolio:'Portfolio review',challenge:'Design challenge',behavioural:'Behavioural',whiteboard:'Whiteboard'};
-let mode='portfolio', level='junior', sessionQs=[], qIndex=0, history=[], loading=false;
+$('#modes').innerHTML = Object.entries(MODES).map(([k, m]) => `<button class="mode" data-m="${k}" aria-pressed="${k === mode}">${I(m.i)}<b>${m.name}</b><span>${m.d}</span></button>`).join('');
+$('#modes').addEventListener('click', e => { const b = e.target.closest('.mode'); if (!b) return; mode = b.dataset.m; $('#modes').querySelectorAll('.mode').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+$('#levels').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; level = b.dataset.l; $('#levels').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+const show = id => ['start', 'session', 'score'].forEach(s => $('#' + s).hidden = s !== id);
 
-async function callAI(system, messages, maxTokens = 1000) {
-  const res = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system, messages, max_tokens: maxTokens }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
-  return data.text || '';
+async function callAI(system, messages, max_tokens = 1000) {
+  const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ system, messages, max_tokens }) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(r.status === 429 ? 'Too many requests right now. Wait a minute and try again.' : 'The interviewer could not respond. Please try again.');
+  return d.text || '';
 }
 
-function selectMode(m,el){
-  mode=m;
-  document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
+$('#begin').addEventListener('click', () => {
+  qs = [...QUESTIONS[mode][level]].sort(() => Math.random() - .5).slice(0, 5); qi = 0; hist = [];
+  $('#who-sub').textContent = `${MODES[mode].name} · ${level}`;
+  $('#tip').innerHTML = `<b>How to answer</b>${MODES[mode].tip}`;
+  $('#chat').innerHTML = ''; show('session'); ask();
+});
+function steps() { $('#steps').innerHTML = qs.map((q, i) => `<li class="${i < qi ? 'done' : i === qi ? 'on' : ''}"><i>${i < qi ? '✓' : i + 1}</i><span>${esc(q)}</span></li>`).join(''); }
+function ask() {
+  steps();
+  if (qi >= qs.length) return finish();
+  const el = document.createElement('div'); el.className = 'q';
+  el.innerHTML = `<span class="eyebrow">Question ${qi + 1} of ${qs.length}</span>${qi === 0 ? '<p class="intro">Thanks for coming in. Take your time, there is no rush.</p>' : ''}<h2>${esc(qs[qi])}</h2>`;
+  $('#chat').appendChild(el); el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('#answer').value = ''; $('#answer').disabled = false; upd(); $('#answer').focus({ preventScroll: true });
+  t0 = Date.now(); clearInterval(tick); tick = setInterval(timer, 1000); timer();
 }
-function selectLevel(l,el){
-  level=l;
-  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-}
+function timer() { const s = Math.floor((Date.now() - t0) / 1000); $('#timer').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; $('#timer').classList.toggle('warn', s > 180); }
+function upd() { const n = $('#answer').value.trim().split(/\s+/).filter(Boolean).length; $('#words').textContent = n + (n === 1 ? ' word' : ' words') + (n && n < 40 ? ' · add detail' : ''); $('#words').classList.toggle('warn', n > 0 && n < 40); $('#send').disabled = busy || n < 3; }
+$('#answer').addEventListener('input', upd);
+$('#answer').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) send(); });
+$('#send').addEventListener('click', send);
+$('#skip').addEventListener('click', () => { if (busy) return; hist.push({ q: qs[qi], a: '', skipped: true }); qi++; ask(); });
+$('#end').addEventListener('click', () => { clearInterval(tick); finish(); });
 
-function startSession(){
-  const qs=[...QUESTIONS[mode][level]].sort(()=>Math.random()-0.5).slice(0,5);
-  sessionQs=qs; qIndex=0; history=[];
-  document.getElementById('dg-start').style.display='none';
-  document.getElementById('dg-session').style.display='block';
-  document.getElementById('dg-mode-label').textContent=MODE_LABELS[mode];
-  document.getElementById('dg-level-label').textContent=level.charAt(0).toUpperCase()+level.slice(1);
-  document.getElementById('dg-chat').innerHTML='';
-  renderProgress();
-  askQuestion();
-}
-
-function renderProgress(){
-  const p=document.getElementById('dg-progress');
-  p.innerHTML=sessionQs.map((_,i)=>`<div class="prog-dot ${i<qIndex?'done':i===qIndex?'active':''}"></div>`).join('');
-}
-
-function addMsg(role,text,extra=''){
-  const chat=document.getElementById('dg-chat');
-  const isInt=role==='interviewer';
-  const div=document.createElement('div');
-  div.className='msg';
-  div.id=`msg-${Date.now()}`;
-  div.innerHTML=`
-    <div class="msg-av ${isInt?'av-int':'av-you'}">${isInt?'I':'Y'}</div>
-    <div class="msg-body">
-      <div class="msg-name">${isInt?'Interviewer':'You'}</div>
-      <div class="msg-text">${text}</div>
-      ${extra}
-    </div>`;
-  chat.appendChild(div);
-  div.scrollIntoView({behavior:'smooth',block:'end'});
-  return div;
-}
-
-function addLoadingMsg(){
-  const chat=document.getElementById('dg-chat');
-  const div=document.createElement('div');
-  div.className='msg';
-  div.id='loading-msg';
-  div.innerHTML=`
-    <div class="msg-av av-int">I</div>
-    <div class="msg-body">
-      <div class="msg-name">Interviewer</div>
-      <div class="msg-text loading">Thinking...</div>
-    </div>`;
-  chat.appendChild(div);
-  div.scrollIntoView({behavior:'smooth',block:'end'});
-}
-
-function removeLoadingMsg(){
-  const el=document.getElementById('loading-msg');
-  if(el) el.remove();
-}
-
-function askQuestion(){
-  if(qIndex>=sessionQs.length){endSession();return;}
-  const q=sessionQs[qIndex];
-  const intro = qIndex===0
-    ? `Hi, thanks for coming in today. Let's get started. Question ${qIndex+1} of ${sessionQs.length}:`
-    : `Good. Let's move on. Question ${qIndex+1} of ${sessionQs.length}:`;
-  addMsg('interviewer',`${intro}<br><br><strong>${q}</strong>`);
-  document.getElementById('dg-textarea').value='';
-  document.getElementById('dg-textarea').disabled=false;
-  document.getElementById('dg-submit').disabled=false;
-  document.getElementById('dg-textarea').focus();
-}
-
-async function submitAnswer(){
-  const ans=document.getElementById('dg-textarea').value.trim();
-  if(!ans||loading) return;
-  loading=true;
-  document.getElementById('dg-submit').disabled=true;
-  document.getElementById('dg-textarea').disabled=true;
-  addMsg('you',ans.replace(/\n/g,'<br>'));
-  history.push({q:sessionQs[qIndex],a:ans});
-  addLoadingMsg();
-
-  const systemPrompt=`You are a senior design interviewer at a top tech company (think Google, Airbnb, Figma). You are conducting a ${MODE_LABELS[mode]} interview with a ${level}-level designer.
+const SYS = () => `You are a senior design interviewer at a top tech company (think Google, Airbnb, Figma). You are conducting a ${MODES[mode].name} interview with a ${level}-level designer.
 
 Your job:
-1. Give a SHORT natural interviewer response (1-2 sentences max) — react genuinely to their answer, like a real person would. Reference something specific they said.
+1. Give a SHORT natural interviewer response (1-2 sentences max). React genuinely, like a real person. Reference something specific they said.
 2. Then give structured feedback in this exact JSON format after the text, wrapped in <FEEDBACK> tags:
 <FEEDBACK>
-{
-  "strong": "one specific thing they did well — be concrete, not generic",
-  "weak": "one specific gap or missed opportunity — be honest and direct",
-  "senior_answer": "what a senior designer would have added that they didn't — 1-2 sentences",
-  "scores": {"clarity": 3, "depth": 2, "structure": 3, "designer_thinking": 2}
-}
+{"strong":"one specific thing they did well, concrete not generic","weak":"one specific gap or missed opportunity, honest and direct","senior_answer":"what a senior designer would have added, 1-2 sentences","scores":{"clarity":3,"depth":2,"structure":3,"designer_thinking":2}}
 </FEEDBACK>
-Scores are 1-4. Be honest. Don't give everyone 4s.
+Scores are 1-4. Be honest. Don't give everyone 4s. Calibrate to the ${level} level.
 
-Rules:
-- React like a human interviewer, not a teacher
-- Be direct and honest in feedback — vague praise is useless
-- If the answer was weak, say so respectfully but clearly
-- Never use bullet points in the interviewer response part
-- The feedback must feel genuinely helpful, not generic`;
+Rules: react like a human interviewer, not a teacher. Be direct; vague praise is useless. No bullet points in the spoken part.`;
 
-  const messages = history.slice(0,-1).flatMap(h=>[
-    {role:'user',content:`Question: ${h.q}\nMy answer: ${h.a}`},
-    {role:'assistant',content:'Acknowledged.'}
-  ]);
-  messages.push({role:'user',content:`Question: ${sessionQs[qIndex]}\nMy answer: ${ans}`});
-
-  try{
-    const full=await callAI(systemPrompt, messages, 1000);
-    const feedbackMatch=full.match(/<FEEDBACK>([\s\S]*?)<\/FEEDBACK>/);
-    const interviewerText=full.replace(/<FEEDBACK>[\s\S]*?<\/FEEDBACK>/,'').trim();
-    let feedbackHTML='';
-    if(feedbackMatch){
-      try{
-        const fb=JSON.parse(feedbackMatch[1].trim());
-        const pips=(n)=>Array.from({length:4},(_,i)=>`<span class="fb-pip ${i<n?'on':''}"></span>`).join('');
-        feedbackHTML=`<div class="feedback-box">
-          <div class="fb-row"><span class="fb-label">Strong</span><span class="fb-val">${fb.strong}</span></div>
-          <div class="fb-row"><span class="fb-label">Weak</span><span class="fb-val">${fb.weak}</span></div>
-          <div class="fb-row"><span class="fb-label">Senior add</span><span class="fb-val">${fb.senior_answer}</span></div>
-          <div class="fb-scores">
-            ${Object.entries(fb.scores).map(([k,v])=>`<span class="fb-score-item">${k} <span class="fb-score">${pips(v)}</span></span>`).join('')}
-          </div>
-        </div>`;
-        history[history.length-1].scores=fb.scores;
-      }catch(e){}
-    }
-    removeLoadingMsg();
-    addMsg('interviewer',interviewerText.replace(/\n/g,'<br>'),feedbackHTML);
-    qIndex++;
-    renderProgress();
-    if(qIndex<sessionQs.length){
-      setTimeout(()=>{
-        addMsg('interviewer',`Ready for the next question?<br><br><strong>${sessionQs[qIndex]}</strong>`);
-        document.getElementById('dg-textarea').value='';
-        document.getElementById('dg-textarea').disabled=false;
-        document.getElementById('dg-submit').disabled=false;
-        document.getElementById('dg-textarea').focus();
-      },800);
-    } else {
-      setTimeout(()=>endSession(),800);
-    }
-  }catch(e){
-    removeLoadingMsg();
-    addMsg('interviewer', e.message || 'Something went wrong. Please try again.');
-    document.getElementById('dg-submit').disabled=false;
-    document.getElementById('dg-textarea').disabled=false;
+async function send() {
+  const a = $('#answer').value.trim(); if (!a || busy) return;
+  busy = true; clearInterval(tick); $('#answer').disabled = true; upd(); $('#err').hidden = true;
+  const secs = Math.floor((Date.now() - t0) / 1000);
+  const me = document.createElement('div'); me.className = 'ans'; me.textContent = a; $('#chat').appendChild(me);
+  const ty = document.createElement('div'); ty.className = 'say'; ty.innerHTML = '<div class="av">AR</div><div class="typing" aria-label="Interviewer is typing"><i></i><i></i><i></i></div>'; $('#chat').appendChild(ty); ty.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  const answered = hist.filter(h => !h.skipped);
+  const messages = answered.flatMap(h => [{ role: 'user', content: `Question: ${h.q}\nMy answer: ${h.a}` }, { role: 'assistant', content: 'Acknowledged.' }]);
+  messages.push({ role: 'user', content: `Question: ${qs[qi]}\nMy answer: ${a}` });
+  try {
+    const full = await callAI(SYS(), messages, 1000);
+    const m = full.match(/<FEEDBACK>([\s\S]*?)<\/FEEDBACK>/);
+    const spoken = full.replace(/<FEEDBACK>[\s\S]*?<\/FEEDBACK>/, '').trim();
+    let fb = null; try { fb = m && JSON.parse(m[1].trim()); } catch {}
+    ty.remove();
+    const r = document.createElement('div'); r.className = 'reply';
+    r.innerHTML = `<div class="say"><div class="av">AR</div><p></p></div>${fb ? `<div class="fb"><div class="fb-g"><div class="s"><h4>Worked</h4><p>${esc(fb.strong)}</p></div><div class="w"><h4>Missing</h4><p>${esc(fb.weak)}</p></div><div class="x"><h4>A senior would add</h4><p>${esc(fb.senior_answer)}</p></div></div><div class="scores">${meters(fb.scores)}</div></div>` : ''}`;
+    r.querySelector('.say p').textContent = spoken || 'Thanks, noted.';
+    $('#chat').appendChild(r); r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    hist.push({ q: qs[qi], a, secs, fb });
+    qi++; busy = false;
+    setTimeout(ask, 900);
+  } catch (e) {
+    ty.remove(); me.remove(); busy = false; $('#answer').disabled = false; upd();
+    $('#err').textContent = e.message; $('#err').hidden = false; t0 = Date.now() - secs * 1000; tick = setInterval(timer, 1000);
   }
-  loading=false;
 }
+const col = v => v >= 3.5 ? 'var(--ok)' : v >= 2.5 ? 'var(--warn)' : 'var(--accent)';
+const meters = (s = {}) => KEYS.map(k => { const v = +s[k] || 0; return `<div class="sc"><small>${k.replace('_', ' ')}<b>${v ? v.toFixed(v % 1 ? 1 : 0) : '–'}/4</b></small><div class="meter"><i style="width:${v / 4 * 100}%;--c:${col(v)}"></i></div></div>`; }).join('');
 
-async function endSession(){
-  document.getElementById('dg-session').style.display='none';
-  document.getElementById('dg-scorecard').style.display='block';
-  document.getElementById('dg-sc-sub').textContent=`${MODE_LABELS[mode]} · ${level} level · ${history.length} question${history.length!==1?'s':''} answered`;
-
-  if(history.length===0){
-    document.getElementById('dg-sc-grade').textContent='—';
-    document.getElementById('dg-sc-grade-label').textContent='No answers recorded';
-    document.getElementById('dg-sc-sections').innerHTML='<div class="sc-section"><div class="sc-section-body">You ended the session before answering any questions.</div></div>';
-    return;
-  }
-
-  document.getElementById('dg-sc-grade').textContent='...';
-  document.getElementById('dg-sc-grade-label').textContent='Generating scorecard';
-
-  const systemPrompt=`You are a senior design interviewer. The candidate just completed a ${MODE_LABELS[mode]} interview at ${level} level. Based on their answers, give an honest session scorecard.
+async function finish() {
+  show('score');
+  const done = hist.filter(h => !h.skipped);
+  $('#g-sub').textContent = `${MODES[mode].name} · ${level} · ${done.length} of ${qs.length} answered`;
+  const scored = done.filter(h => h.fb?.scores);
+  const avg = Object.fromEntries(KEYS.map(k => [k, scored.length ? scored.reduce((s, h) => s + (+h.fb.scores[k] || 0), 0) / scored.length : 0]));
+  $('#avg').innerHTML = meters(avg);
+  $('#qs').innerHTML = hist.map((h, i) => `<details><summary>${esc(h.q)}<span>${h.skipped ? 'skipped' : h.fb?.scores ? (KEYS.reduce((s, k) => s + (+h.fb.scores[k] || 0), 0) / 4).toFixed(1) + '/4' : '—'}</span></summary><p>${esc(h.a || 'No answer.')}</p></details>`).join('') || '<p class="tip">No questions reached.</p>';
+  if (!done.length) { $('#g').textContent = '—'; $('#g-label').textContent = 'No answers recorded'; $('#sec').innerHTML = ''; return; }
+  $('#g').textContent = '…'; $('#g-label').textContent = 'Writing your scorecard…'; $('#g-verdict').hidden = true;
+  $('#sec').innerHTML = ['Strongest moment', 'Biggest gap', 'Work on this next'].map(t => `<div class="panel"><h4>${t}</h4><div class="skel"></div><div class="skel" style="width:70%"></div></div>`).join('');
+  const system = `You are a senior design interviewer. The candidate just completed a ${MODES[mode].name} interview at ${level} level. Based on their answers, give an honest session scorecard.
 
 Respond ONLY in this JSON format, no other text:
-{
-  "grade": "A / B+ / B / C+ / C / D",
-  "grade_label": "3-4 word summary e.g. Strong candidate, Needs more depth",
-  "strongest_moment": "specific reference to their best answer — what they did well",
-  "biggest_gap": "the most important thing they consistently missed across answers",
-  "one_thing": "the single most important thing to work on before their next interview",
-  "hiring_verdict": "Would you pass them to the next round? Be honest. One sentence."
-}`;
-
-  const userContent=history.map((h,i)=>`Q${i+1}: ${h.q}\nAnswer: ${h.a}`).join('\n\n');
-
-  try{
-    const txt=await callAI(systemPrompt, [{role:'user',content:userContent}], 600) || '{}';
-    const clean=txt.replace(/```json|```/g,'').trim();
-    const sc=JSON.parse(clean);
-    document.getElementById('dg-sc-grade').textContent=sc.grade||'—';
-    document.getElementById('dg-sc-grade-label').textContent=sc.grade_label||'';
-    document.getElementById('dg-sc-sections').innerHTML=`
-      <div class="sc-section"><div class="sc-section-title">Strongest moment</div><div class="sc-section-body">${sc.strongest_moment||'—'}</div></div>
-      <div class="sc-section"><div class="sc-section-title">Biggest gap</div><div class="sc-section-body">${sc.biggest_gap||'—'}</div></div>
-      <div class="sc-section"><div class="sc-section-title">Work on this before your next interview</div><div class="sc-section-body">${sc.one_thing||'—'}</div></div>
-      <div class="sc-section"><div class="sc-section-title">Hiring verdict</div><div class="sc-section-body">${sc.hiring_verdict||'—'}</div></div>`;
-  }catch(e){
-    document.getElementById('dg-sc-grade').textContent='—';
-    document.getElementById('dg-sc-grade-label').textContent='Could not generate scorecard';
-  }
+{"grade":"A / B+ / B / C+ / C / D","grade_label":"3-5 word summary","strongest_moment":"specific reference to their best answer","biggest_gap":"the most important thing they consistently missed","one_thing":"the single most important thing to work on before their next interview","hiring_verdict":"Would you pass them to the next round? Be honest. One sentence."}`;
+  try {
+    const sc = JSON.parse((await callAI(system, [{ role: 'user', content: done.map((h, i) => `Q${i + 1}: ${h.q}\nAnswer: ${h.a}`).join('\n\n') }], 600)).replace(/```json|```/g, '').trim());
+    window._sc = sc;
+    $('#g').textContent = sc.grade || '—'; $('#g-label').textContent = sc.grade_label || '';
+    $('#g-verdict').textContent = sc.hiring_verdict || ''; $('#g-verdict').hidden = !sc.hiring_verdict;
+    $('#sec').innerHTML = [['Strongest moment', sc.strongest_moment], ['Biggest gap', sc.biggest_gap], ['Work on this next', sc.one_thing]].map(([t, v]) => `<div class="panel"><h4>${t}</h4><p>${esc(v || '—')}</p></div>`).join('');
+  } catch { $('#g').textContent = '—'; $('#g-label').textContent = 'Could not write the scorecard. Your per-answer feedback is above.'; $('#sec').innerHTML = ''; }
 }
-
-function restart(){
-  document.getElementById('dg-scorecard').style.display='none';
-  document.getElementById('dg-start').style.display='block';
-}
-
-document.getElementById('dg-textarea').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)) submitAnswer();
+$('#again').addEventListener('click', () => show('start'));
+$('#copy').addEventListener('click', () => {
+  const sc = window._sc || {};
+  const txt = `Designgrill · ${$('#g-sub').textContent}\nGrade: ${sc.grade || '—'} (${sc.grade_label || ''})\nVerdict: ${sc.hiring_verdict || ''}\nStrongest: ${sc.strongest_moment || ''}\nGap: ${sc.biggest_gap || ''}\nNext: ${sc.one_thing || ''}`;
+  navigator.clipboard.writeText(txt).then(() => { $('#copy').textContent = 'Copied ✓'; setTimeout(() => $('#copy').textContent = 'Copy summary', 1400); });
 });
 </script>
 </body>
